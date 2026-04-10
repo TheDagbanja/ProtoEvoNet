@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # =============================================================================
-# ProtoEvoNet Q1 Experiment Runner
+# ProtoEvoNet Experiment Runner
 #
 # Runs all experiments described in README_EXPERIMENTS.md in sequence.
 #
