@@ -145,7 +145,7 @@ bash run_all_experiments.sh \
 bash run_all_experiments.sh --dry-run
 ```
 
-Estimated wall-clock time on a single A100:
+Estimated wall-clock time on a single RTX 3090:
 | Step | Experiment | Time |
 |------|-----------|------|
 | 0 | OpenSARShip data prep | ~5 min |
