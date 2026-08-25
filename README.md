@@ -83,8 +83,6 @@ flowchart LR
 - **Phase 1 — Contrastive pre-training (HRSID):** SRAB backbone trained with the **AGCP** loss (InfoNCE + physics-guided hard-negative mining). *Optional* — if HRSID is absent, Phase 2 starts from a random backbone.
 - **Phase 2 — Episodic meta-learning (FUSAR-Ship):** N-way K-shot episodes with the **PIAM** loss (`λ_proto·L_proto + λ_physics·L_physics + λ_novelty·L_novelty`), driving the HBS enrolment path and prototype memory.
 
-See [`figures/architecture_training.png`](figures/architecture_training.png) and [`figures/architecture_hbs.png`](figures/architecture_hbs.png) for detailed diagrams.
-
 ---
 
 ## Repository Structure
