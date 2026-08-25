@@ -4,10 +4,6 @@
 
 ProtoEvoNet is a few-shot, open-world recognition system for Synthetic Aperture Radar (SAR) imagery. It combines a physics-aware convolutional backbone, a hippocampus-inspired prototype-binding system for **online class enrolment**, an evolving prototype memory, and a calibrated **novelty detector** that flags targets from classes the model has never seen. The system can learn a new target class from only a handful of support chips — without retraining — and decide whether a new observation is a *known* class or a *novel* one.
 
-<p align="center">
-  <img src="figures/architecture_full.png" alt="ProtoEvoNet full system architecture" width="95%">
-</p>
-
 ---
 
 ## Table of Contents
