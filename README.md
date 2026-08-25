@@ -18,7 +18,6 @@ ProtoEvoNet is a few-shot, open-world recognition system for Synthetic Aperture 
 - [Inference API](#inference-api)
 - [Configuration & Ablations](#configuration--ablations)
 - [Experiments & Reproduction](#experiments--reproduction)
-- [Figures](#figures)
 - [Results at a Glance](#results-at-a-glance)
 - [Troubleshooting](#troubleshooting)
 - [Citation](#citation)
