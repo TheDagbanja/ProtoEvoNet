@@ -1,6 +1,6 @@
 # ProtoEvoNet
 
-**Physics-Aware Meta-Learning for Open-World SAR Target Recognition**
+**ProtoEvoNet: Open-World Few-Shot SAR Target Recognition via Physics-Calibrated Prototype Evolution**
 
 ProtoEvoNet is a few-shot, open-world recognition system for Synthetic Aperture Radar (SAR) imagery. It combines a physics-aware convolutional backbone, a hippocampus-inspired prototype-binding system for **online class enrolment**, an evolving prototype memory, and a calibrated **novelty detector** that flags targets from classes the model has never seen. The system can learn a new target class from only a handful of support chips — without retraining — and decide whether a new observation is a *known* class or a *novel* one.
 
@@ -334,13 +334,14 @@ operating threshold, not AUROC.
 
 ## Citation
 
-If you use ProtoEvoNet in your research, please cite this repository:
+If you use ProtoEvoNet in your research, please cite our paper:
 
 ```bibtex
 @software{protoevonet,
   author  = {{TheDagbanja} and the ProtoEvoNet Research contributors},
-  title   = {ProtoEvoNet: Physics-Aware Meta-Learning for Open-World SAR Target Recognition},
-  year    = {2025},
+  title   = {ProtoEvoNet: Open-World Few-Shot SAR Target Recognition via Physics-Calibrated Prototype Evolution},
+  year    = {2026},
+  journal = {# To be updated upon publication}
   url     = {https://github.com/TheDagbanja/ProtoEvoNet}
 }
 ```
