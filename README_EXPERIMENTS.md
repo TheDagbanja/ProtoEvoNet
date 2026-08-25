@@ -383,7 +383,7 @@ workstations / cloud inference. Run `python count_parameters.py --checkpoint
 ## 7. File Structure
 
 ```
-ProtoEvo/
+ProtoEvoNet/
 ├── main.py                     # Main entry point (training + demo + low-shot eval)
 ├── prepare_opensarship.py      # OpenSARShip 2.0 data loader and split builder
 ├── baseline_novelty.py         # OpenMax, Energy, KNN, CSI, ARPL baselines
