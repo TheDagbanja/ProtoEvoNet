@@ -1,6 +1,6 @@
 # ProtoEvoNet — Q1 Experiment Reproduction Guide
 
-This document describes all experiments reported in the paper for the ProtoEvoNet open-world SAR target recognition system.  Every result can be reproduced from a single trained checkpoint using the scripts in this repository.
+This document describes all experiments reported in the Q1 paper submission for the ProtoEvoNet open-world SAR target recognition system.  Every result can be reproduced from a single trained checkpoint using the scripts in this repository.
 
 ---
 
@@ -145,7 +145,7 @@ bash run_all_experiments.sh \
 bash run_all_experiments.sh --dry-run
 ```
 
-Estimated wall-clock time on a single RTX 3090:
+Estimated wall-clock time on a single A100:
 | Step | Experiment | Time |
 |------|-----------|------|
 | 0 | OpenSARShip data prep | ~5 min |
@@ -260,9 +260,13 @@ Additionally, the 5 baseline methods (OpenMax, Energy, KNN, CSI, ARPL) from `bas
 
 Results are logged as a comparison table and saved to `logs/novelty_summary.csv`.
 
-**Best method** (C1c — Physics per-class LDA):
-- AUROC: **0.9146**
-- FPR@95TPR: **0.1950**
+**Novelty-head covariance ablation** (physics score, matches `figures/physics_ablation`):
+
+| Covariance model | AUROC | FPR@95TPR |
+|------------------|------:|----------:|
+| C1 — Global Gaussian    | 0.903 | 0.262 |
+| C1b — Per-class diagonal | 0.901 | 0.216 |
+| **C1c — Per-class LDA (best)** | **0.936** | **0.175** |
 
 ---
 
@@ -320,16 +324,28 @@ The `AblationConfig` dataclass in `utils/config.py` documents all available flag
 
 ## 6. Expected Results
 
-### 6.1 Low-Shot Recognition (FUSAR 10-class)
+### 6.1 Low-Shot Recognition
 
-| n-shot | Accuracy (mean ± std) | Macro-F1 (mean ± std) |
-|-------:|----------------------:|----------------------:|
-| 1      | ~52 ± 4%              | ~48 ± 5%              |
-| 5      | ~72 ± 3%              | ~69 ± 3%              |
-| 10     | ~80 ± 2%              | ~77 ± 2%              |
-| 20     | ~85 ± 1%              | ~83 ± 2%              |
+**FUSAR-Ship 10-class (in-domain).** Recognition is near-ceiling: the 5-shot and
+10-shot confusion matrices are near-identical at **≈ 94 % overall accuracy**
+(436/462 correct; see `figures/confusion_matrix_fusar_5shot` /
+`_10shot`). Most classes reach 100 %; the dominant residual confusion is
+**Cargo → Fishing** (~22/50), with a minor Other→Tug leakage. Per-class 10-shot
+accuracy is 100 % for every class except *Other* (~94 %) — see
+`figures/per_class_accuracy`.
 
-*Exact numbers depend on the trained checkpoint.*
+**Cross-domain few-shot learning curves** (frozen backbone, from
+`figures/learning_curve`):
+
+| Support / class | OpenSARShip acc. | MSTAR acc. |
+|----------------:|-----------------:|-----------:|
+| 1-shot  | ~34 % | ~16 % |
+| 5-shot  | ~68 % | ~57 % |
+| 10-shot | ~74 % | ~60 % |
+| 20-shot | ~71 % | ~63 % |
+
+*Exact per-seed mean ± std values are written to
+`results/low_shot_{dataset}_summary.csv` by the low-shot evaluation runs above.*
 
 ### 6.2 Cross-Domain Novelty Detection (FUSAR known vs MSTAR novel)
 
@@ -339,19 +355,28 @@ The `AblationConfig` dataclass in `utils/config.py` documents all available flag
 | Min-distance (d₁) | ~0.72 | ~0.48 |
 | Energy score | ~0.65 | ~0.60 |
 | PCA-Mahalanobis | ~0.71 | ~0.51 |
-| **C1c: Physics per-class LDA** | **~0.91** | **~0.20** |
+| **C1c: Physics per-class LDA** | **0.936** | **0.175** |
 | C2c: Physics LDA + PCA-RMD | ~0.89 | ~0.22 |
 
 ### 6.3 Parameter Count
 
-| Module | Parameters |
-|--------|----------:|
-| SRABBackbone | ~2.3M |
-| HippocampalBindingSystem | ~800K |
-| Physics modules | ~50K |
-| **ProtoEvoNet total** | **~3.2M** |
+Parameter scale vs. baselines and the original proposal estimate (see
+`figures/parameter_scale`):
 
-*Compared to LN-SCNet (~1.2M) — ProtoEvoNet is larger due to the HBS memory system, but provides online class enrollment that fixed classifiers cannot.*
+| Method | Trainable parameters |
+|--------|---------------------:|
+| ProtoNet (Conv4) | 0.113 M |
+| LightResKAN | 0.34 M |
+| LN-SCNet | 1.2 M |
+| Proposed (ProtoEvoNet, proposal est.) | 1.5 M |
+| **ProtoEvoNet (implemented)** | **14.8 M** |
+
+*The implemented ProtoEvoNet (~14.8 M) is ≈10× the original proposal estimate
+(~1.5 M): the HBS memory system, physics layer, and cross-scale attention add
+capacity that fixed-classifier baselines lack, in exchange for online class
+enrolment. Edge deployment is not the target — the system runs on GPU
+workstations / cloud inference. Run `python count_parameters.py --checkpoint
+<ckpt>` for the exact per-module breakdown of a given checkpoint.*
 
 ---
 
@@ -413,9 +438,8 @@ ProtoEvo/
 
 ## Notes
 
-- All random seeds are set via `--seed` (default: 42).  Low-shot evaluation additionally iterates over seeds 0–10.
+- All random seeds are set via `--seed` (default: 42).  Low-shot evaluation additionally iterates over seeds 0–4.
 - Physics descriptors `[k, θ, SNR, SI, mean_intensity]` are computed on CPU to avoid CUDA sync issues.
 - The Platt calibrator is rank-invariant: AUROC does **not** change after calibration, only the decision threshold (FPR@95TPR) improves.
 - SLICY is explicitly excluded from MSTAR evaluation as it is a calibration trihedral reflector, not a military vehicle.
 - The `--low-shot-eval` flag uses the frozen backbone with simple mean-prototype classification (no HBS) for a clean few-shot benchmark.
-- The novelty detection benchmark includes 14 methods across 3 families (distance-based, energy-based, and physics-based) for a comprehensive comparison.
