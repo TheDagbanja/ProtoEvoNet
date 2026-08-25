@@ -346,7 +346,7 @@ If you use ProtoEvoNet in your research, please cite our paper:
 }
 ```
 
-*(Update author/year and add a paper reference once published.)*
+*(journal and year will be updated once published.)*
 
 ---
 
