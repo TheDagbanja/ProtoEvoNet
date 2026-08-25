@@ -338,7 +338,7 @@ If you use ProtoEvoNet in your research, please cite our paper:
 
 ```bibtex
 @software{protoevonet,
-  author  = {{TheDagbanja} and the ProtoEvoNet Research contributors},
+  author  = {S. Dagbanja, J. Qian and H. LV},
   title   = {ProtoEvoNet: Open-World Few-Shot SAR Target Recognition via Physics-Calibrated Prototype Evolution},
   year    = {2026},
   journal = {# To be updated upon publication}
